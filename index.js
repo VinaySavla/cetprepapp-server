@@ -63,8 +63,8 @@ db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'stude
 
 
 // Routers
-const api = require("./routes/contact");
-app.use("/api", api);
+const Contact = require("./routes/contact");
+app.use("/api", Contact);
 
 
 db.sequelize.sync().then(() => {
