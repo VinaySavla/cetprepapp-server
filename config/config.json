@@ -1,26 +1,26 @@
 {
   "development": {
-    "username": "u353810860_ivssol",
-    "password": "ivsSol@123",
-    "database": "u353810860_ivssol",
-    "host": "srv1132.hstgr.io",
+    "username": "admin",
+    "password": "Greencurve1802",
+    "database": "contact",
+    "host": "64.227.138.245",
     "dialect": "mysql",
     "logging": false,
     "timezone": "+05:30"
   },
   "test": {
-    "username": "u353810860_ivssol",
-    "password": "ivsSol@123",
-    "database": "u353810860_ivssol",
-    "host": "srv1132.hstgr.io",
+    "username": "admin",
+    "password": "Greencurve1802",
+    "database": "contact",
+    "host": "64.227.138.245",
     "dialect": "mysql",
     "timezone": "+05:30"
   },
   "production": {
-    "username": "u353810860_ivssol",
-    "password": "ivsSol@123",
-    "database": "u353810860_ivssol",
-    "host": "srv1132.hstgr.io",
+    "username": "admin",
+    "password": "Greencurve1802",
+    "database": "contact",
+    "host": "64.227.138.245",
     "dialect": "mysql",
     "timezone": "+05:30"
   }

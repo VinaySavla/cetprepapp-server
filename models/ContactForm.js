@@ -1,39 +1,47 @@
 module.exports = (sequelize, DataTypes) => {
-    const Questions = sequelize.define("Questions", {
-      QuestionID: {
+    const ContactForm = sequelize.define("ContactForm", {
+      Id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      Question: {
+      Name:{
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      Email:{
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      PhoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      OptionA:{
+      PreferredMethodOfContact:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
-      OptionB:{
+      InterestedServices: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
       },
-      OptionC:{
+      InvestmentExperience: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
       },
-      OptionD:{
+      City: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
       },
-      CorrectOption:{
+      Subject: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
       },
-      Difficulty:{
+      Message: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
       },
-      isPYQ: {
+      isContacted: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -42,6 +50,6 @@ module.exports = (sequelize, DataTypes) => {
       createdAt:'TimeStamp',
       updatedAt:false,
     });
-    return Questions;
+    return ContactForm;
   };
   
