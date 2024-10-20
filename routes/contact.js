@@ -4,7 +4,6 @@ const { Op } = require("sequelize");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
-const e = require("express");
 const axios = require('axios');
 const {StudentUser} = require("../models");
 const {FacultyUser} = require("../models");
