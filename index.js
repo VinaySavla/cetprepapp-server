@@ -36,29 +36,29 @@ const db = require("./models");
 //Foreign Keys
 
 // //One to Many
-db.Subjects.hasMany(db.Chapters, { foreignKey: 'SubjectID', as: 'chapters' });
-db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+// db.Subjects.hasMany(db.Chapters, { foreignKey: 'SubjectID', as: 'chapters' });
+// db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
-db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+// db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
+// db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'questions' });
-db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+// db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'questions' });
+// db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-db.Chapters.hasMany(db.Questions, { foreignKey: 'ChapterID', as: 'questions' });
-db.Questions.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'chapters' });
+// db.Chapters.hasMany(db.Questions, { foreignKey: 'ChapterID', as: 'questions' });
+// db.Questions.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'chapters' });
 
 
-//Many to Many
-db.Questions.belongsToMany(db.QuestionPaper, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionID' });
-db.QuestionPaper.belongsToMany(db.Questions, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionPaperID' });
+// //Many to Many
+// db.Questions.belongsToMany(db.QuestionPaper, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionID' });
+// db.QuestionPaper.belongsToMany(db.Questions, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionPaperID' });
 
-db.FacultyUser.belongsToMany(db.Subjects, { through: 'FacultySubjects', foreignKey: 'FacultyID' });
-db.Subjects.belongsToMany(db.FacultyUser, { through: 'FacultySubjects', foreignKey: 'SubjectID' });
+// db.FacultyUser.belongsToMany(db.Subjects, { through: 'FacultySubjects', foreignKey: 'FacultyID' });
+// db.Subjects.belongsToMany(db.FacultyUser, { through: 'FacultySubjects', foreignKey: 'SubjectID' });
 
-// //One To One
-db.StudentUser.hasOne(db.QuestionPaper, { foreignKey: 'StudentID', as: 'questionpaper' });
-db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'studentuser' });
+// // //One To One
+// db.StudentUser.hasOne(db.QuestionPaper, { foreignKey: 'StudentID', as: 'questionpaper' });
+// db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'studentuser' });
 
 
 
