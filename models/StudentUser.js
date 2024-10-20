@@ -1,11 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
-    const Users = sequelize.define("Users", {
-      Id: {
+    const StudentUser = sequelize.define("StudentUser", {
+      StudentID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      Name:{
+      FirstName:{
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      LastName:{
         type: DataTypes.STRING,
         allowNull: false
       },
@@ -13,27 +17,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      PhoneNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       Password:{
         type: DataTypes.STRING,
         allowNull: false
       },
-      Role:{
+      PhoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      CurrentClass:{
         type: DataTypes.STRING,
         allowNull: false
       },
-      isVerified: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
+      Gap: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     }, {
       createdAt:'TimeStamp',
       updatedAt:false,
     });
-    return Users;
+    return StudentUser;
   };
   
