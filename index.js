@@ -72,6 +72,9 @@ db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
   });
+})
+.catch(err => {
+  console.error("Failed to sync database:", err);
 });
 
 // Run All Crons
