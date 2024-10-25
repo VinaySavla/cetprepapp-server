@@ -51,11 +51,23 @@ db.Questions.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'chapters' })
 db.StudentUser.hasMany(db.QuestionPaper, { foreignKey: 'StudentID', as: 'questionpaper' });
 db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'studentuser' });
 
+db.QuestionPaper.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionPaperID', as: 'questionpaper' });
+db.QuestionPaperQuestions.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionpaperquestions' });
+
+db.Questions.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionID', as: 'questions' });
+db.QuestionPaperQuestions.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'questionquestions' });
+
+db.Subjects.hasMany(db.FacultyUserSubjects, { foreignKey: 'SubjectID', as: 'facultyusersubjects' });
+db.FacultyUserSubjects.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+
+db.FacultyUser.hasMany(db.FacultyUserSubjects, { foreignKey: 'FacultyID', as: 'facultysubjects' });
+db.FacultyUserSubjects.belongsTo(db.FacultyUser, { foreignKey: 'FacultyID', as: 'FacultyUser' });
+
 // //Many to Many
 // db.Questions.belongsToMany(db.QuestionPaper, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionID' });
 // db.QuestionPaper.belongsToMany(db.Questions, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionPaperID' });
 
-// db.FacultyUser.belongsToMany(db.Subjects, { through: 'FacultySubjects', foreignKey: 'FacultyID' });
+// db.FacultyUser.belongsToMany(db.Subjects, { through: 'FacultySubjects', foreignKey: 'SubjectID' });
 // db.Subjects.belongsToMany(db.FacultyUser, { through: 'FacultySubjects', foreignKey: 'SubjectID' });
 
 // //One To One
@@ -67,7 +79,7 @@ const Contact = require("./routes/contact");
 app.use("/api", Contact);
 
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({force:true}).then(() => {
   // https.createServer(options, app).listen(PORT);
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);

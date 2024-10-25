@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const QuestionPaperQuestions = sequelize.define("QuestionPaperQuestions", {
-        QuestionPaperQuestionID: {
+    const FacultyUserSubjects = sequelize.define("FacultyUserSubjects", {
+      FacultyUserSubjectID: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
@@ -10,6 +10,6 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: false,
     });
     
-    return QuestionPaperQuestions;
+    return FacultyUserSubjects;
   };
   
