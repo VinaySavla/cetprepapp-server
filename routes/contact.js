@@ -5,14 +5,14 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
 const axios = require('axios');
-const {StudentUser} = require("../models");
-const {FacultyUser} = require("../models");
+const {User} = require("../models");
 const {OTP} = require("../models");
 const {Subjects} = require("../models");
 const {Chapters} = require("../models");
 const {Notes} = require("../models");
 const {Questions} = require("../models");
 const {QuestionPaper} = require("../models");
+const {QPQuestions} = require("../models");
 
 
 
@@ -101,23 +101,10 @@ router.post("/verifyotp", async (req, res) => {
 
 //POST APIs
 
-// Creates a new StudentUser on database
-router.post("/student-register", async (req, res) => {
+// Creates a new User on database
+router.post("/register", async (req, res) => {
   const bodyData = req.body;
-  const createResponse = await StudentUser.create(bodyData);
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(createResponse);
-});
-
-// Creates a new FacultyUser on database
-router.post("/faculty-register", async (req, res) => {
-  const bodyData = req.body;
-  const createResponse = await FacultyUser.create(bodyData);
+  const createResponse = await User.create(bodyData);
   res.header({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -128,27 +115,9 @@ router.post("/faculty-register", async (req, res) => {
 });
 
 // Verify User on database
-router.post("/student-login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const bodyData = req.body;
-  const createResponse = await StudentUser.findOne({
-    where: {
-      Email: bodyData.Email,
-      Password: bodyData.Password,
-    },
-  });
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(createResponse);
-});
-
-// Verify User on database
-router.post("/facylty-login", async (req, res) => {
-  const bodyData = req.body;
-  const createResponse = await FacultyUser.findOne({
+  const createResponse = await User.findOne({
     where: {
       Email: bodyData.Email,
       Password: bodyData.Password,
@@ -488,7 +457,7 @@ router.get("/getquestionpaper/:QuestionPaperID", async (req, res) => {
   const questionPaperData = await QuestionPaper.findByPk(questionPaperID, {
     include: [
       {
-        model: StudentUser,
+        model: User,
         as: "studentuser",
       },
       {
@@ -506,12 +475,12 @@ router.get("/getquestionpaper/:QuestionPaperID", async (req, res) => {
   res.json(questionPaperData);
 });
 
-//Get QuestionPapers by StudentID
-router.get("/getstudentquestionpapers/:StudentID", async (req, res) => {
-  const studentID = req.params.StudentID;
+//Get QuestionPapers by UserID
+router.get("/getstudentquestionpapers/:UserID", async (req, res) => {
+  const studentID = req.params.UserID;
   const questionPaperData = await QuestionPaper.findAll({
     where: {
-      StudentID: studentID,
+      UserID: studentID,
     },
     order: [["QuestionPaperID", "ASC"]],
   });
@@ -525,10 +494,10 @@ router.get("/getstudentquestionpapers/:StudentID", async (req, res) => {
 });
 
 //Get Faculty by id
-router.get("/getfaculty/:FacultyID", async (req, res) => {
-  const FacultyID = req.params.FacultyID;
+router.get("/getfaculty/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
   // console.log(contactID);
-  const FacultyData = await FacultyUser.findByPk(FacultyID);
+  const FacultyData = await User.findByPk(UserID);
   res.header({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -539,10 +508,10 @@ router.get("/getfaculty/:FacultyID", async (req, res) => {
 });
 
 //Get Student by id
-router.get("/getstudent/:StudentID", async (req, res) => {
-  const StudentID = req.params.StudentID;
+router.get("/getstudent/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
   // console.log(contactID);
-  const StudentData = await StudentUser.findByPk(StudentID);
+  const StudentData = await User.findByPk(UserID);
   res.header({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -573,13 +542,13 @@ router.delete("/deletequestion/:QuestionID", async (req, res) => {
   res.json(QuestionData);
 });
 
-// Delete FacultyUser by id
-router.delete("/deletefaculty/:FacultyID", async (req, res) => {
-  const FacultyID = req.params.FacultyID;
+// Delete User by id
+router.delete("/deletefaculty/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
   // console.log(contactID);
-  const FacultyData = await FacultyUser.destroy({
+  const FacultyData = await User.destroy({
     where: {
-      FacultyID: FacultyID
+      UserID: UserID
     },
   });
   res.header({
@@ -591,13 +560,13 @@ router.delete("/deletefaculty/:FacultyID", async (req, res) => {
   res.json(FacultyData);
 });
 
-// Delete StudentUser by id
-router.delete("/deletestudent/:StudentID", async (req, res) => {
-  const StudentID = req.params.StudentID;
+// Delete User by id
+router.delete("/deletestudent/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
   // console.log(contactID);
-  const StudentData = await StudentUser.destroy({
+  const StudentData = await User.destroy({
     where: {
-      StudentID: StudentID
+      UserID: UserID
     },
   });
   res.header({
@@ -716,18 +685,18 @@ router.put("/updatequestion/:QuestionID", async (req, res) => {
   }
 });
 
-// updates StudentUser value
-router.put("/updatestudent/:StudentID", async (req, res) => {
-  const StudentID = req.params.StudentID;
+// updates User value
+router.put("/updatestudent/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
   bodyData = req.body;
-  const StudentData = await StudentUser.update(bodyData, {
+  const StudentData = await User.update(bodyData, {
     where: {
-      StudentID: StudentID,
+      UserID: UserID,
     },
   });
 
   if (StudentData) {
-    const updatedStudentData = await StudentUser.findByPk(StudentID);
+    const updatedStudentData = await User.findByPk(UserID);
     res.header({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
@@ -746,18 +715,18 @@ router.put("/updatestudent/:StudentID", async (req, res) => {
   }
 });
 
-// updates FacultyUser value
-router.put("/updatefaculty/:FacultyID", async (req, res) => {
-  const FacultyID = req.params.FacultyID;
+// updates User value
+router.put("/updatefaculty/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
   bodyData = req.body;
-  const FacultyData = await FacultyUser.update(bodyData, {
+  const FacultyData = await User.update(bodyData, {
     where: {
-      FacultyID: FacultyID,
+      UserID: UserID,
     },
   });
 
   if (FacultyData) {
-    const updatedFacultyData = await FacultyUser.findByPk(FacultyID);
+    const updatedFacultyData = await User.findByPk(UserID);
     res.header({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

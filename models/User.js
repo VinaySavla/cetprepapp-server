@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const StudentUser = sequelize.define("StudentUser", {
-      StudentID: {
+    const User = sequelize.define("User", {
+      UserID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -27,16 +27,26 @@ module.exports = (sequelize, DataTypes) => {
       },
       CurrentClass:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       Gap: {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      isFaculty: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     }, {
       createdAt:'TimeStamp',
       updatedAt:false,
     });
-    return StudentUser;
+    return User;
   };
   

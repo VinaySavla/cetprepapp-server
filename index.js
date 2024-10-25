@@ -39,8 +39,8 @@ const db = require("./models");
 db.Subjects.hasMany(db.Chapters, { foreignKey: 'SubjectID', as: 'chapters' });
 db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-// db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
-// db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
+db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
 db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'questions' });
 db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
@@ -48,8 +48,8 @@ db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' })
 db.Chapters.hasMany(db.Questions, { foreignKey: 'ChapterID', as: 'questions' });
 db.Questions.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'chapters' });
 
-db.StudentUser.hasMany(db.QuestionPaper, { foreignKey: 'StudentID', as: 'questionpaper' });
-db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'studentuser' });
+db.User.hasMany(db.QuestionPaper, { foreignKey: 'StudentID', as: 'questionpaper' });
+db.QuestionPaper.belongsTo(db.User, { foreignKey: 'StudentID', as: 'user' });
 
 db.QuestionPaper.hasMany(db.QPQuestions, { foreignKey: 'QuestionPaperID', as: 'questionpaper' });
 db.QPQuestions.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionpaperquestions' });
