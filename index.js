@@ -36,26 +36,29 @@ const db = require("./models");
 //Foreign Keys
 
 // //One to Many
-db.Subjects.hasMany(db.Chapters, { foreignKey: 'SubjectID', as: 'chapters' });
-db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+db.Subjects.hasMany(db.Chapters, { foreignKey: 'SubjectID', as: 'subjectChapters' });  // Changed alias to subjectChapters
+db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subject' });  // Changed alias to subject
 
 // db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
 // db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'questions' });
-db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+// One-to-Many associations
 
-db.Chapters.hasMany(db.Questions, { foreignKey: 'ChapterID', as: 'questions' });
-db.Questions.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'chapters' });
+db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'subjectQuestions' });  // Changed alias to subjectQuestions
+db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'questionSubject' });  // Changed alias to questionSubject
 
-db.StudentUser.hasMany(db.QuestionPaper, { foreignKey: 'StudentID', as: 'questionpaper' });
-db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'studentuser' });
+db.Chapters.hasMany(db.Questions, { foreignKey: 'ChapterID', as: 'chapterQuestions' });  // Changed alias to chapterQuestions
+db.Questions.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'questionChapter' });  // Changed alias to questionChapter
 
-db.QuestionPaper.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionPaperID', as: 'questionpaper' });
-db.QuestionPaperQuestions.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionpaperquestions' });
+db.StudentUser.hasMany(db.QuestionPaper, { foreignKey: 'StudentID', as: 'studentQuestionPapers' });  // Changed alias to studentQuestionPapers
+db.QuestionPaper.belongsTo(db.StudentUser, { foreignKey: 'StudentID', as: 'student' });  // Changed alias to student
 
-db.Questions.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionID', as: 'question' });
-db.QuestionPaperQuestions.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'questionquestions' });
+db.QuestionPaper.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionPaperID', as: 'questionPaperQuestions' });  // Changed alias to questionPaperQuestions
+db.QuestionPaperQuestions.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionPaper' });  // Changed alias to questionPaper
+
+db.Questions.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionID', as: 'questionQuestions' });  // Changed alias to questionQuestions
+db.QuestionPaperQuestions.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'question' });  // Changed alias to question
+
 
 // db.Subjects.hasMany(db.FacultyUserSubjects, { foreignKey: 'SubjectID', as: 'facultyusersubjects' });
 // db.FacultyUserSubjects.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
