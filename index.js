@@ -79,7 +79,7 @@ const Contact = require("./routes/contact");
 app.use("/api", Contact);
 
 
-db.sequelize.sync({alter:true}).then(() => {
+db.sequelize.sync().then(() => {
   // https.createServer(options, app).listen(PORT);
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
