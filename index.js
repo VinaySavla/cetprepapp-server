@@ -57,11 +57,11 @@ db.QuestionPaperQuestions.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPap
 db.Questions.hasMany(db.QuestionPaperQuestions, { foreignKey: 'QuestionID', as: 'questions' });
 db.QuestionPaperQuestions.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'questionquestions' });
 
-db.Subjects.hasMany(db.FacultyUserSubjects, { foreignKey: 'SubjectID', as: 'facultyusersubjects' });
-db.FacultyUserSubjects.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+// db.Subjects.hasMany(db.FacultyUserSubjects, { foreignKey: 'SubjectID', as: 'facultyusersubjects' });
+// db.FacultyUserSubjects.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-db.FacultyUser.hasMany(db.FacultyUserSubjects, { foreignKey: 'FacultyID', as: 'facultysubjects' });
-db.FacultyUserSubjects.belongsTo(db.FacultyUser, { foreignKey: 'FacultyID', as: 'FacultyUser' });
+// db.FacultyUser.hasMany(db.FacultyUserSubjects, { foreignKey: 'FacultyID', as: 'facultysubjects' });
+// db.FacultyUserSubjects.belongsTo(db.FacultyUser, { foreignKey: 'FacultyID', as: 'FacultyUser' });
 
 // //Many to Many
 // db.Questions.belongsToMany(db.QuestionPaper, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionID' });
