@@ -39,8 +39,8 @@ const db = require("./models");
 db.Subjects.hasMany(db.Chapters, { foreignKey: 'SubjectID', as: 'chapters' });
 db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
-db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
-db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
+// db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
+// db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
 db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'questions' });
 db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
