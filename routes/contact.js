@@ -27,7 +27,7 @@ let transporter = nodemailer.createTransport({
 });
 
 
-router.post("/", async (req, res) => {
+router.get("/", async (req, res) => {
   res.json({ message: "Welcome to CETPREPAPP SERVER"});
 });
 
