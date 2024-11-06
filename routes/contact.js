@@ -132,12 +132,12 @@ router.post("/login", async (req, res) => {
       Password: bodyData.Password,
     },
   });
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
+  // res.header({
+  //   "Content-Type": "application/json",
+  //   "Access-Control-Allow-Origin": "*",
+  //   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+  //   "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  // });
   res.json(createResponse);
 });
 
