@@ -12,7 +12,7 @@ const {Chapters} = require("../models");
 const {Notes} = require("../models");
 const {Questions} = require("../models");
 const {QuestionPaper} = require("../models");
-const {QPQuestions} = require("../models");
+const {QPQuestions, sequelize} = require("../models");
 
 
 
@@ -185,18 +185,54 @@ router.post("/addquestion", async (req, res) => {
 });
 
 // Creates a new QuestionPaper
+// router.post("/addquestionpaper", async (req, res) => {
+//   const bodyData = req.body;
+//   //TODO: Add logic to add random questions to the question paper
+//   const createResponse = await QuestionPaper.create(bodyData);
+//   res.header({
+//     "Content-Type": "application/json",
+//     "Access-Control-Allow-Origin": "*",
+//     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+//     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+//   });
+//   res.json(createResponse);
+// });
+
 router.post("/addquestionpaper", async (req, res) => {
-  const bodyData = req.body;
-  //TODO: Add logic to add random questions to the question paper
-  const createResponse = await QuestionPaper.create(bodyData);
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(createResponse);
+  try {
+    const bodyData = req.body;
+
+    // Create the QuestionPaper entry
+    const questionPaper = await QuestionPaper.create(bodyData);
+
+    // Fetch 20 random unique questions
+    const randomQuestions = await Questions.findAll({
+      order: sequelize.random(),
+      limit: 20
+    });
+
+    // Create entries in QPQuestions for each question
+    const qPQuestionsEntries = randomQuestions.map(question => ({
+      QuestionPaperID: questionPaper.id,
+      QuestionID: question.id
+    }));
+
+    await QPQuestions.bulkCreate(qPQuestionsEntries);
+
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+
+    res.json({ questionPaper, addedQuestions: randomQuestions });
+  } catch (error) {
+    console.error("Error creating question paper with random questions:", error);
+    res.status(500).json({ error: "Failed to create question paper" });
+  }
 });
+
 
 
 //GET APIs
