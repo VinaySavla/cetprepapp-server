@@ -116,15 +116,6 @@ router.post("/register", async (req, res) => {
 
 // Verify User on database
 router.post("/login", async (req, res) => {
-  // Set CORS headers for this specific route
-  res.header("Access-Control-Allow-Origin", "*"); // Your frontend URL
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
-
-  // Handle preflight requests (OPTIONS)
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // End the request here for OPTIONS
-  }
   const bodyData = req.body;
   const createResponse = await User.findOne({
     where: {
@@ -132,12 +123,12 @@ router.post("/login", async (req, res) => {
       Password: bodyData.Password,
     },
   });
-  // res.header({
-  //   "Content-Type": "application/json",
-  //   "Access-Control-Allow-Origin": "*",
-  //   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-  //   "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  // });
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
   res.json(createResponse);
 });
 
