@@ -6,23 +6,23 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true
       },
       Question: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       OptionA:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       OptionB:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       OptionC:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       OptionD:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       CorrectOption:{

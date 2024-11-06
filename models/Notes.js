@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true
       },
       DocumentLink:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
     }, {
