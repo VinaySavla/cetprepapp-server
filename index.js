@@ -23,16 +23,11 @@ const PORT = 4000;
 // }))
 
 app.use(express.json());
-// app.use(cors({
-//   credentials: true,
-//   origin: function(origin, callback){
-//     return callback(null, true);
-//   }
-// }));
 app.use(cors({
-  origin: '*', // Adjust based on allowed origin
-  methods: ['GET', 'POST','PUT','PATCH', 'OPTIONS'], // Specify allowed methods if needed
-  credentials: true, // Add if cookies or authentication headers are needed
+  credentials: true,
+  origin: function(origin, callback){
+    return callback(null, true);
+  }
 }));
 
 const db = require("./models");
