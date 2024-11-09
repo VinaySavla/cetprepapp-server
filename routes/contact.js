@@ -529,6 +529,55 @@ router.get("/getstudentquestionpapers/:UserID", async (req, res) => {
   res.json(questionPaperData);
 });
 
+//Get all Faculties
+router.get("/getallfaculties", async(req,res) =>{
+  const FacultyData = await User.findAll({
+    where:{
+      isFaculty: true
+    }
+  })
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(FacultyData);
+});
+
+//Get all Faculties
+router.get("/getonlyfaculties", async(req,res) =>{
+  const FacultyData = await User.findAll({
+    where:{
+      isFaculty: true,
+      isAdmin: false
+    }
+  })
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(FacultyData);
+});
+
+//Get all Admins
+router.get("/getalladmins", async(req,res) =>{
+  const FacultyData = await User.findAll({
+    where:{
+      isAdmin: true
+    }
+  })
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(FacultyData);
+});
+
 //Get Faculty by id
 router.get("/getfaculty/:UserID", async (req, res) => {
   const UserID = req.params.UserID;
