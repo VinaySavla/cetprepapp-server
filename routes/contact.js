@@ -132,6 +132,25 @@ router.post("/login", async (req, res) => {
   res.json(createResponse);
 });
 
+// Verify User on database
+router.post("/faculty-login", async (req, res) => {
+  const bodyData = req.body;
+  const createResponse = await User.findOne({
+    where: {
+      Email: bodyData.Email,
+      Password: bodyData.Password,
+      isFaculty: true
+    },
+  });
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(createResponse);
+});
+
 // Creates a new Subject
 router.post("/addsubject", async (req, res) => {
   const bodyData = req.body;
