@@ -545,7 +545,7 @@ router.get("/getallfaculties", async(req,res) =>{
   res.json(FacultyData);
 });
 
-//Get all Faculties
+//Get all Faculties who are not admins
 router.get("/getonlyfaculties", async(req,res) =>{
   const FacultyData = await User.findAll({
     where:{
@@ -807,6 +807,66 @@ router.put("/updatefaculty/:UserID", async (req, res) => {
   const FacultyData = await User.update(bodyData, {
     where: {
       UserID: UserID,
+    },
+  });
+
+  if (FacultyData) {
+    const updatedFacultyData = await User.findByPk(UserID);
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(updatedFacultyData);
+  } else {
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(FacultyData);
+  }
+});
+
+// Make Faculty a admin
+router.put("/makeadmin/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
+  const FacultyData = await User.update({isAdmin:true}, {
+    where: {
+      UserID: UserID,
+      isFaculty:true
+    },
+  });
+
+  if (FacultyData) {
+    const updatedFacultyData = await User.findByPk(UserID);
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(updatedFacultyData);
+  } else {
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(FacultyData);
+  }
+});
+
+// dismiss Faculty a admin
+router.put("/dismissadmin/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
+  const FacultyData = await User.update({isAdmin:false}, {
+    where: {
+      UserID: UserID,
+      isFaculty:true
     },
   });
 
