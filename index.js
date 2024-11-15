@@ -42,6 +42,9 @@ db.Chapters.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 db.Subjects.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
 db.Notes.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
+db.Chapters.hasMany(db.Notes, { foreignKey: 'SubjectID', as: 'notes' });
+db.Notes.belongsTo(db.Chapters, { foreignKey: 'ChapterID', as: 'chapters' });
+
 db.Subjects.hasMany(db.Questions, { foreignKey: 'SubjectID', as: 'questions' });
 db.Questions.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
