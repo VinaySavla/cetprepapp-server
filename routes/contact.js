@@ -232,8 +232,8 @@ router.post("/addquestionpaper", async (req, res) => {
 
     // Create entries in QPQuestions for each question
     const qPQuestionsEntries = randomQuestions.map(question => ({
-      QuestionPaperID: questionPaper.id,
-      QuestionID: question.id
+      QuestionPaperID: questionPaper.QuestionPaperID,
+      QuestionID: question.QuestionID
     }));
 
     await QPQuestions.bulkCreate(qPQuestionsEntries);
@@ -508,27 +508,41 @@ router.get("/getquestionpapers", async (req, res) => {
 // Gets the QuestionPaper by id
 router.get("/getquestionpaper/:QuestionPaperID", async (req, res) => {
   const questionPaperID = req.params.QuestionPaperID;
-  // console.log(questionPaperID);
-  const questionPaperData = await QuestionPaper.findByPk(questionPaperID, {
-    include: [
-      {
-        model: User,
-        as: "studentuser",
-      },
-      {
-        model: Questions,
-        as: "questions",
-      },
-    ],
-  });
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(questionPaperData);
+
+  try {
+    const questionPaperData = await QuestionPaper.findByPk(questionPaperID, {
+      include: [
+        {
+          model: User,
+          as: "user", // Including the user who created the question paper (if applicable)
+        },
+        {
+          model: QPQuestions,
+          as: "questionpaper", // Including the intermediate QPQuestions table
+          include: [
+            {
+              model: Questions,
+              as: "questionquestions", // Fetch the actual questions through QPQuestions
+            },
+          ],
+        },
+      ],
+    });
+
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+
+    res.json(questionPaperData);
+  } catch (error) {
+    console.error("Error fetching question paper data:", error);
+    res.status(500).json({ error: "An error occurred while fetching data." });
+  }
 });
+
 
 //Get QuestionPapers by UserID
 router.get("/getstudentquestionpapers/:UserID", async (req, res) => {
