@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
+      Status:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "Published"
+      },
       isPYQ: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
