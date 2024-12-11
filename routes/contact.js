@@ -563,10 +563,11 @@ router.get("/getstudentquestionpapers/:UserID", async (req, res) => {
 });
 
 //Get all Faculties
-router.get("/getallfaculties", async(req,res) =>{
-  const FacultyData = await User.findAll({
+router.get("/getallusers/:role", async(req,res) =>{
+  const role = req.params.role;
+  const UserData = await User.findAll({
     where:{
-      isFaculty: true
+      Role: role
     }
   })
   res.header({
@@ -575,7 +576,7 @@ router.get("/getallfaculties", async(req,res) =>{
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
   });
-  res.json(FacultyData);
+  res.json(UserData);
 });
 
 //Get all Faculties who are not admins
