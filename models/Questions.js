@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       Difficulty:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       Status:{
         type: DataTypes.STRING,

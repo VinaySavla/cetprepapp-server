@@ -73,8 +73,8 @@ db.QPQuestions.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'question
 // db.Questions.belongsToMany(db.QuestionPaper, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionID' });
 // db.QuestionPaper.belongsToMany(db.Questions, { through: 'QuestionPaperQuestions', foreignKey: 'QuestionPaperID' });
 
-// db.FacultyUser.belongsToMany(db.Subjects, { through: 'FacultySubjects', foreignKey: 'SubjectID' });
-// db.Subjects.belongsToMany(db.FacultyUser, { through: 'FacultySubjects', foreignKey: 'SubjectID' });
+db.User.belongsToMany(db.Subjects, { through: 'UserSubject', foreignKey: 'UserID' });
+db.Subjects.belongsToMany(db.User, { through: 'UserSubject', foreignKey: 'SubjectID' });
 
 // //One To One
 

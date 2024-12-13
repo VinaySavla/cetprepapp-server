@@ -12,6 +12,7 @@ const {Chapters} = require("../models");
 const {Notes} = require("../models");
 const {Questions} = require("../models");
 const {QuestionPaper} = require("../models");
+const {UserSubject} = require("../models");
 const {QPQuestions, sequelize} = require("../models");
 
 
@@ -105,6 +106,22 @@ router.post("/verifyotp", async (req, res) => {
 router.post("/register", async (req, res) => {
   const bodyData = req.body;
   const createResponse = await User.create(bodyData);
+
+  if (bodyData.subjects && bodyData.subjects.length > 0) {
+    // Ensure that the provided subjects exist in the database
+    const subjectsInDb = await Subjects.findAll({
+      where: {
+        SubjectID: bodyData.subjects,  // Use the subject IDs passed from the client
+      },
+    });
+
+    if (subjectsInDb.length !== bodyData.subjects.length) {
+      return res.status(400).json({ error: "Some subject IDs are invalid" });
+    }
+
+    // Associate the user with the subjects
+    await createResponse.setSubjects(bodyData.subjects); // Many-to-many relation via UserSubject
+  }
   res.header({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -251,6 +268,88 @@ router.post("/addquestionpaper", async (req, res) => {
     res.status(500).json({ error: "Failed to create question paper" });
   }
 });
+
+
+//Assign Subjects to Users
+router.post("/assignSubjects", async (req, res) => {
+  const { UserID, Subjects } = req.body; // Destructure the request body
+  // console.log(UserID, Subjects);
+
+  try {
+    // Step 1: Input validation
+    if (!UserID || !Subjects || !Array.isArray(Subjects) || Subjects.length === 0) {
+      return res.status(400).json({ error: "UserID and a non-empty array of Subjects are required" });
+    }
+
+    // Step 2: Check if the user exists in the database
+    const user = await User.findByPk(UserID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // // Step 3: Ensure the provided Subjects exist in the database
+    // const subjectsInDb = await Subjects.findAll({
+    //   where: {
+    //     SubjectID: Subjects,  // Use the subject IDs passed from the client
+    //   },
+    // });
+
+    // // Step 4: Validate if all provided subject IDs exist in the database
+    // if (subjectsInDb.length !== Subjects.length) {
+    //   return res.status(400).json({ error: "Some subject IDs are invalid" });
+    // }
+
+    // Step 5: Assign the Subjects to the user
+    await user.setSubjects(Subjects); // Many-to-many relation via UserSubject
+
+    // Step 6: Return success response
+    res.status(200).json({ message: "Subjects assigned successfully to the user" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to assign Subjects. Please try again later." });
+  }
+});
+
+//Remove Subject
+router.post("/removeSubjects", async (req, res) => {
+  const { UserID, Subjects } = req.body; // Destructure the request body
+
+  try {
+    // Step 1: Validate the input
+    if (!UserID || !Subjects || !Array.isArray(Subjects) || Subjects.length === 0) {
+      return res.status(400).json({ error: "UserID and a non-empty array of Subjects are required" });
+    }
+
+    // Step 2: Check if the user exists
+    const user = await User.findByPk(UserID);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // // Step 3: Ensure the provided Subjects exist in the database
+    // const subjectsInDb = await Subjects.findAll({
+    //   where: {
+    //     id: Subjects, // Ensure the column name is correct (id or SubjectID)
+    //   },
+    // });
+
+    // // Step 4: Check if all Subjects are valid
+    // if (subjectsInDb.length !== Subjects.length) {
+    //   return res.status(400).json({ error: "Some subject IDs are invalid" });
+    // }
+
+    // Step 5: Remove Subjects from the user
+    await user.removeSubjects(Subjects);  // Dissociate subjects from the user
+
+    // Step 6: Return success response
+    res.status(200).json({ message: "Subjects removed successfully from the user" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to remove subjects. Please try again later." });
+  }
+});
+
+
 
 
 
@@ -563,21 +662,33 @@ router.get("/getstudentquestionpapers/:UserID", async (req, res) => {
 });
 
 //Get all Faculties
-router.get("/getallusers/:role", async(req,res) =>{
+router.get("/getallusers/:role", async (req, res) => {
   const role = req.params.role;
-  const UserData = await User.findAll({
-    where:{
-      Role: role
-    }
-  })
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(UserData);
+  try {
+    const UserData = await User.findAll({
+      where: {
+        Role: role
+      },
+      include: [
+        {
+          model: Subjects, // Directly include Subjects instead of UserSubject
+          as: "Subjects", // This should match the alias you used in the association
+        },
+      ],
+    });
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(UserData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 //Get all Faculties who are not admins
 router.get("/getonlyfaculties", async(req,res) =>{
