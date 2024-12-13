@@ -723,6 +723,27 @@ router.get("/getalladmins", async(req,res) =>{
   res.json(FacultyData);
 });
 
+//Get User by id
+router.get("/getuser/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
+  // console.log(contactID);
+  const FacultyData = await User.findByPk(UserID,{
+    include: [
+      {
+        model: Subjects, // Directly include Subjects instead of UserSubject
+        as: "Subjects", // This should match the alias you used in the association
+      },
+    ],
+  });
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(FacultyData);
+});
+
 //Get Faculty by id
 router.get("/getfaculty/:UserID", async (req, res) => {
   const UserID = req.params.UserID;
@@ -945,10 +966,12 @@ router.put("/updatestudent/:UserID", async (req, res) => {
   }
 });
 
-// updates User value
-router.put("/updatefaculty/:UserID", async (req, res) => {
+// updates User value and modifies associated Subjects
+router.put("/updateuser/:UserID", async (req, res) => {
   const UserID = req.params.UserID;
-  bodyData = req.body;
+  const bodyData = req.body;
+  
+  // First, update User data (no change in this part)
   const FacultyData = await User.update(bodyData, {
     where: {
       UserID: UserID,
@@ -956,14 +979,31 @@ router.put("/updatefaculty/:UserID", async (req, res) => {
   });
 
   if (FacultyData) {
-    const updatedFacultyData = await User.findByPk(UserID);
+    // After updating the user, check for subject changes
+    if (bodyData.subjects && Array.isArray(bodyData.subjects)) {
+      // Assume `subjects` is an array of Subject IDs that need to be associated with the user.
+      const user = await User.findByPk(UserID);
+      
+      // Update the many-to-many relationship: set the subjects for the user
+      await user.setSubjects(bodyData.subjects);  // This replaces the old subjects with the new ones.
+
+      // Alternatively, if you want to add/remove subjects dynamically:
+      // await user.addSubjects(newSubjectIds);  // To add new subjects
+      // await user.removeSubjects(removeSubjectIds);  // To remove subjects
+    }
+
+    // Fetch updated data and send the response
+    const updatedUserData = await User.findByPk(UserID, {
+      include: Subjects, // Include Subjects to return them in the response
+    });
+    
     res.header({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
       "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
     });
-    res.json(updatedFacultyData);
+    res.json(updatedUserData);
   } else {
     res.header({
       "Content-Type": "application/json",
@@ -975,13 +1015,14 @@ router.put("/updatefaculty/:UserID", async (req, res) => {
   }
 });
 
+
 // Make Faculty a admin
 router.put("/makeadmin/:UserID", async (req, res) => {
   const UserID = req.params.UserID;
   const FacultyData = await User.update({isAdmin:true}, {
     where: {
       UserID: UserID,
-      isFaculty:true
+      Role:"Faculty"
     },
   });
 
@@ -1008,10 +1049,10 @@ router.put("/makeadmin/:UserID", async (req, res) => {
 // dismiss Faculty a admin
 router.put("/dismissadmin/:UserID", async (req, res) => {
   const UserID = req.params.UserID;
-  const FacultyData = await User.update({isAdmin:false}, {
+  const FacultyData = await User.update({Role:"Subject_Admin"}, {
     where: {
       UserID: UserID,
-      isFaculty:true
+      Role:"Faculty"
     },
   });
 
