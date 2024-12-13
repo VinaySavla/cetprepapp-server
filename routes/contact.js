@@ -553,41 +553,80 @@ router.get("/getquestion/:QuestionID", async (req, res) => {
   res.json(questionData);
 });
 
-//Get Questions by SubjectID
+// Get Questions by SubjectID (handle array-like string '[1,2,3]')
 router.get("/getsubjectquestions/:SubjectID", async (req, res) => {
-  const subjectID = req.params.SubjectID;
-  const questionData = await Questions.findAll({
-    where: {
-      SubjectID: subjectID,
-    },
-    order: [["QuestionID", "ASC"]],
-  });
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(questionData);
+  const subjectIDParam = req.params.SubjectID;
+
+  // Check if SubjectID looks like an array (e.g., "[1,2,3]")
+  let subjectIDs = [];
+  if (subjectIDParam.startsWith('[') && subjectIDParam.endsWith(']')) {
+    // Remove the square brackets and split by comma
+    subjectIDs = subjectIDParam.slice(1, -1).split(',').map(id => id.trim());
+  } else {
+    // If it's a single value, just use it as an array
+    subjectIDs = [subjectIDParam];
+  }
+
+  try {
+    // Fetch questions by SubjectIDs
+    const questionData = await Questions.findAll({
+      where: {
+        SubjectID: subjectIDs.length > 1 ? { [Op.in]: subjectIDs } : subjectIDs[0],
+      },
+      order: [["QuestionID", "ASC"]],
+    });
+
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+
+    res.json(questionData);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while fetching the questions." });
+  }
 });
 
+
 //Get Questions by ChapterID
+// Get Questions by ChapterID (handle array-like string '[1,2,3]')
 router.get("/getchapterquestions/:ChapterID", async (req, res) => {
-  const chapterID = req.params.ChapterID;
-  const questionData = await Questions.findAll({
-    where: {
-      ChapterID: chapterID,
-    },
-    order: [["QuestionID", "ASC"]],
-  });
-  res.header({
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
-  res.json(questionData);
+  const chapterIDParam = req.params.ChapterID;
+
+  // Check if ChapterID looks like an array (e.g., "[1,2,3]")
+  let chapterIDs = [];
+  if (chapterIDParam.startsWith('[') && chapterIDParam.endsWith(']')) {
+    // Remove the square brackets and split by comma
+    chapterIDs = chapterIDParam.slice(1, -1).split(',').map(id => id.trim());
+  } else {
+    // If it's a single value, just use it as an array
+    chapterIDs = [chapterIDParam];
+  }
+
+  try {
+    // Fetch questions by ChapterIDs
+    const questionData = await Questions.findAll({
+      where: {
+        ChapterID: chapterIDs.length > 1 ? { [Op.in]: chapterIDs } : chapterIDs[0], // Use Op.in for multiple ChapterIDs
+      },
+      order: [["QuestionID", "ASC"]],
+    });
+
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+
+    res.json(questionData);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while fetching the questions." });
+  }
 });
+
 
 // Gets all the QuestionPapers
 router.get("/getquestionpapers", async (req, res) => {
