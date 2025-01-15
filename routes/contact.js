@@ -1054,6 +1054,36 @@ router.put("/updateuser/:UserID", async (req, res) => {
   }
 });
 
+//forget password
+router.put("/forgetpassword/:Email", async (req, res) => {
+  const Email = req.params.Email;
+  const bodyData = req.body;
+  const FacultyData = await User.update(bodyData, {
+    where: {
+      Email: Email,
+    },
+  });
+
+  if (FacultyData) {
+    const updatedFacultyData = await User.findOne(Email);
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(updatedFacultyData);
+  } else {
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(FacultyData);
+  }
+});
+
 
 // Make Faculty a admin
 router.put("/makeadmin/:UserID", async (req, res) => {
