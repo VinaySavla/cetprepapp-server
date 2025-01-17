@@ -1065,7 +1065,9 @@ router.put("/forgetpassword/:Email", async (req, res) => {
   });
 
   if (FacultyData) {
-    const updatedFacultyData = await User.findOne(Email);
+    const updatedFacultyData = await User.findOne({where: {
+      Email: Email,
+    }});
     res.header({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
