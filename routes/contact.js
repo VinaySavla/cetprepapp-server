@@ -567,6 +567,24 @@ router.get("/getquestion/:QuestionID", async (req, res) => {
   res.json(questionData);
 });
 
+//get Questions by UserID
+router.get("/getuserquestions/:UserID", async (req, res) => {
+  const userID = req.params.UserID;
+  const questionData = await Questions.findAll({
+    where: {
+      UserID: userID,
+    },
+    order: [["QuestionID", "ASC"]],
+  });
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(questionData);
+});
+
 //get Questions by Status
 router.get("/getquestionsbystatus/:Status", async (req, res) => {
   const status = req.params.Status;
