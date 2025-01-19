@@ -12,6 +12,7 @@ const {Chapters} = require("../models");
 const {Notes} = require("../models");
 const {Questions} = require("../models");
 const {QuestionPaper} = require("../models");
+const {Grievance} = require("../models");
 const {UserSubject} = require("../models");
 const {QPQuestions, sequelize} = require("../models");
 
@@ -349,6 +350,19 @@ router.post("/removeSubjects", async (req, res) => {
   }
 });
 
+//Creates a new Grievance
+router.post("/addgrievance", async (req, res) => {
+  const bodyData = req.body;
+  const createResponse = await Grievance.create(bodyData);
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(createResponse);
+});
+
 
 
 
@@ -543,6 +557,24 @@ router.get("/getquestion/:QuestionID", async (req, res) => {
         as: "chapters",
       },
     ],
+  });
+  res.header({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(questionData);
+});
+
+//get Questions by Status
+router.get("/getquestionsbystatus/:Status", async (req, res) => {
+  const status = req.params.Status;
+  const questionData = await Questions.findAll({
+    where: {
+      Status: status,
+    },
+    order: [["QuestionID", "ASC"]],
   });
   res.header({
     "Content-Type": "application/json",
@@ -811,6 +843,56 @@ router.get("/getstudent/:UserID", async (req, res) => {
   res.json(StudentData);
 });
 
+//Get all Grievances
+router.get("/getgrievances", async (req, res) => {
+  const grievanceData = await Grievance.findAll({
+    //order condition
+    order: [["GrievanceID", "ASC"]],
+  });
+  res.header({
+
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(grievanceData);
+});
+
+//Get Grievance by id
+router.get("/getgrievance/:GrievanceID", async (req, res) => {
+  const GrievanceID = req.params.GrievanceID;
+  // console.log(contactID);
+  const grievanceData = await Grievance.findByPk(GrievanceID);
+  res.header({
+
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(grievanceData);
+});
+
+//Get Grievances by UserID
+router.get("/getusergrievances/:UserID", async (req, res) => {
+  const UserID = req.params.UserID;
+  const grievanceData = await Grievance.findAll({
+    where: {
+      UserID: UserID,
+    },
+    order: [["GrievanceID", "ASC"]],
+  });
+  res.header({
+
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(grievanceData);
+});
+
 
 //DELETE APIs
 
@@ -939,6 +1021,25 @@ router.delete("/deletenote/:NoteID", async (req, res) => {
 //   });
 //   res.json(QuestionPaperData);
 // });
+
+// Delete Grievance by id
+router.delete("/deletegrievance/:GrievanceID", async (req, res) => {
+  const GrievanceID = req.params.GrievanceID;
+  // console.log(contactID);
+  const GrievanceData = await Grievance.destroy({
+    where: {
+      GrievanceID: GrievanceID
+    },
+  });
+  res.header({
+
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+  });
+  res.json(GrievanceData);
+});
 
 
 
@@ -1264,6 +1365,36 @@ router.put("/updatequestionpaper/:QuestionPaperID", async (req, res) => {
       "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
     });
     res.json(QuestionPaperData);
+  }
+});
+
+// updates Grievance value
+router.put("/updategrievance/:GrievanceID", async (req, res) => {
+  const GrievanceID = req.params.GrievanceID;
+  bodyData = req.body;
+  const GrievanceData = await Grievance.update(bodyData, {
+    where: {
+      GrievanceID: GrievanceID,
+    },
+  });
+
+  if (GrievanceData) {
+    const updatedGrievanceData = await Grievance.findByPk(GrievanceID);
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(updatedGrievanceData);
+  } else {
+    res.header({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    });
+    res.json(GrievanceData);
   }
 });
 
