@@ -604,8 +604,9 @@ router.get("/getquestionsbystatus/:Status", async (req, res) => {
 });
 
 // Get Questions by SubjectID (handle array-like string '[1,2,3]')
-router.get("/getsubjectquestions/:SubjectID", async (req, res) => {
+router.get("/getsubjectquestions/:SubjectID/:Status?", async (req, res) => {
   const subjectIDParam = req.params.SubjectID;
+  const Status = req.params.Status;
 
   // Check if SubjectID looks like an array (e.g., "[1,2,3]")
   let subjectIDs = [];
@@ -619,10 +620,16 @@ router.get("/getsubjectquestions/:SubjectID", async (req, res) => {
 
   try {
     // Fetch questions by SubjectIDs
+    const whereCondition = {
+      SubjectID: subjectIDs.length > 1 ? { [Op.in]: subjectIDs } : subjectIDs[0],
+    };
+
+    if (Status) {
+      whereCondition.Status = Status;
+    }
+
     const questionData = await Questions.findAll({
-      where: {
-        SubjectID: subjectIDs.length > 1 ? { [Op.in]: subjectIDs } : subjectIDs[0],
-      },
+      where: whereCondition,
       order: [["QuestionID", "ASC"]],
     });
 
