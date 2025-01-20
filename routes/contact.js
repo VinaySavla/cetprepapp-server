@@ -871,6 +871,21 @@ router.get("/getstudent/:UserID", async (req, res) => {
 //Get all Grievances
 router.get("/getgrievances", async (req, res) => {
   const grievanceData = await Grievance.findAll({
+    //include
+    include: [
+      {
+        model: User,
+        as: "user",
+      },
+      {
+        model: Questions,
+        as: "questions",
+      },
+      {
+        model: QuestionPaper,
+        as: "questionpapers",
+      }
+    ],
     //order condition
     order: [["GrievanceID", "ASC"]],
   });
@@ -888,7 +903,22 @@ router.get("/getgrievances", async (req, res) => {
 router.get("/getgrievance/:GrievanceID", async (req, res) => {
   const GrievanceID = req.params.GrievanceID;
   // console.log(contactID);
-  const grievanceData = await Grievance.findByPk(GrievanceID);
+  const grievanceData = await Grievance.findByPk(GrievanceID,{
+    include: [
+      {
+        model: User,
+        as: "user",
+      },
+      {
+        model: Questions,
+        as: "questions",
+      },
+      {
+        model: QuestionPaper,
+        as: "questionpapers",
+      }
+    ],
+  });
   res.header({
 
     "Content-Type": "application/json",
@@ -906,6 +936,22 @@ router.get("/getusergrievances/:UserID", async (req, res) => {
     where: {
       UserID: UserID,
     },
+    //include
+    include: [
+      {
+        model: User,
+        as: "user",
+      },
+      {
+        model: Questions,
+        as: "questions",
+      },
+      {
+        model: QuestionPaper,
+        as: "questionpapers",
+      }
+    ],
+    //order condition
     order: [["GrievanceID", "ASC"]],
   });
   res.header({
@@ -1404,7 +1450,22 @@ router.put("/updategrievance/:GrievanceID", async (req, res) => {
   });
 
   if (GrievanceData) {
-    const updatedGrievanceData = await Grievance.findByPk(GrievanceID);
+    const updatedGrievanceData = await Grievance.findByPk(GrievanceID,{
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+        {
+          model: Questions,
+          as: "questions",
+        },
+        {
+          model: QuestionPaper,
+          as: "questionpapers",
+        }
+      ],
+    });
     res.header({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",

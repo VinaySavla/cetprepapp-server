@@ -69,6 +69,9 @@ db.Grievance.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'grievance'
 db.User.hasMany(db.Grievance, { foreignKey: 'UserID', as: 'grievance' });
 db.Grievance.belongsTo(db.User, { foreignKey: 'UserID', as: 'user' });
 
+db.QuestionPaper.hasMany(db.Grievance, { foreignKey: 'QuestionPaperID', as: 'grievance' });
+db.Grievance.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionpaper' });
+
 // db.Subjects.hasMany(db.FacultyUserSubjects, { foreignKey: 'SubjectID', as: 'facultyusersubjects' });
 // db.FacultyUserSubjects.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
 
@@ -91,7 +94,7 @@ const Contact = require("./routes/contact");
 app.use("/api", Contact);
 
 
-db.sequelize.sync({alter:true}).then(() => {
+db.sequelize.sync().then(() => {
   // https.createServer(options, app).listen(PORT);
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
