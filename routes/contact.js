@@ -879,11 +879,11 @@ router.get("/getgrievances", async (req, res) => {
       },
       {
         model: Questions,
-        as: "questions",
+        as: "question",
       },
       {
         model: QuestionPaper,
-        as: "questionpapers",
+        as: "questionPaper",
       }
     ],
     //order condition
@@ -911,11 +911,11 @@ router.get("/getgrievance/:GrievanceID", async (req, res) => {
       },
       {
         model: Questions,
-        as: "questions",
+        as: "question",
       },
       {
         model: QuestionPaper,
-        as: "questionpapers",
+        as: "questionPaper",
       }
     ],
   });
@@ -944,11 +944,11 @@ router.get("/getusergrievances/:UserID", async (req, res) => {
       },
       {
         model: Questions,
-        as: "questions",
+        as: "question",
       },
       {
         model: QuestionPaper,
-        as: "questionpapers",
+        as: "questionPaper",
       }
     ],
     //order condition
@@ -1458,11 +1458,11 @@ router.put("/updategrievance/:GrievanceID", async (req, res) => {
         },
         {
           model: Questions,
-          as: "questions",
+          as: "question",
         },
         {
           model: QuestionPaper,
-          as: "questionpapers",
+          as: "questionPaper",
         }
       ],
     });

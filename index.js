@@ -63,14 +63,15 @@ db.QPQuestions.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 
 db.Questions.hasMany(db.QPQuestions, { foreignKey: 'QuestionID', as: 'questions' });
 db.QPQuestions.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'questionquestions' });
 
-db.Questions.hasMany(db.Grievance, { foreignKey: 'QuestionID', as: 'question' });
-db.Grievance.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'grievance' });
+db.Questions.hasMany(db.Grievance, { foreignKey: 'QuestionID', as: 'grievances' });
+db.Grievance.belongsTo(db.Questions, { foreignKey: 'QuestionID', as: 'question' });
 
-db.User.hasMany(db.Grievance, { foreignKey: 'UserID', as: 'grievance' });
+db.User.hasMany(db.Grievance, { foreignKey: 'UserID', as: 'grievances' });
 db.Grievance.belongsTo(db.User, { foreignKey: 'UserID', as: 'user' });
 
-db.QuestionPaper.hasMany(db.Grievance, { foreignKey: 'QuestionPaperID', as: 'grievance' });
-db.Grievance.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionpaper' });
+db.QuestionPaper.hasMany(db.Grievance, { foreignKey: 'QuestionPaperID', as: 'grievances' });
+db.Grievance.belongsTo(db.QuestionPaper, { foreignKey: 'QuestionPaperID', as: 'questionPaper' });
+
 
 // db.Subjects.hasMany(db.FacultyUserSubjects, { foreignKey: 'SubjectID', as: 'facultyusersubjects' });
 // db.FacultyUserSubjects.belongsTo(db.Subjects, { foreignKey: 'SubjectID', as: 'subjects' });
